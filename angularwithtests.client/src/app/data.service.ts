@@ -16,7 +16,15 @@ export class DataService {
     return this.http.get<Customer[]>(`/api/Customers`);
   }
 
-  addCustomer(cust: Customer) : Observable<Customer> {
+  getCustomerById(id: number): Observable<Customer> {
+    return this.http.get<Customer>(`/api/Customers/${id}`);
+  }
+
+  addCustomer(cust: Customer): Observable<Customer> {
     return this.http.post<Customer>(`/api/Customers`, cust);
+  }
+
+  deleteCustomer(id: number): Observable<any> {
+    return this.http.delete<any>(`/api/Customers/${id}`);
   }
 }

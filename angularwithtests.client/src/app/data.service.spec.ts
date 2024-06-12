@@ -48,8 +48,8 @@ describe('DataService', () => {
     });
 
     //Asswert
-    const mockRequest = testingController.expectOne('/api/Customers');
-    expect(mockRequest.request.method).toEqual('GET');
+    const mockRequest = testingController.expectOne({ url: '/api/Customers', method: 'GET' });
+    //expect(mockRequest.request.method).toEqual('GET');
     mockRequest.flush(CUSTOMERS);
   });
 
@@ -63,13 +63,40 @@ describe('DataService', () => {
 
     service.addCustomer(newCustomer).subscribe((result: Customer) => {
       expect(result).toBeTruthy();
-      console.log(result);
       expect(result.customerFirstName).toBe('Jimmy');
     })
 
     const mockRequest = testingController.expectOne({ url: '/api/Customers', method: 'POST' });
-    expect(mockRequest.request.method).toEqual('POST');
+    //expect(mockRequest.request.method).toEqual('POST');
     expect(mockRequest.request.body).toBe(newCustomer);
     mockRequest.flush(newCustomer);
+  });
+
+  it('should delete a customer when deleteCustomer is called', () => {
+    service.deleteCustomer(1).subscribe(result => {
+      expect(result).toBeNull();
+    })
+
+
+    const mockRequest = testingController.expectOne({ url: `/api/Customers/1`, method: 'DELETE' });
+    mockRequest.flush(null);
+  });
+
+  it('should get one by id when getByID is called', () => {
+    let cust: Customer = {
+        customerID: 3,
+        customerFirstName: 'Kyle',
+        customerLastName: 'Garbo',
+        customerPhoneNumber: '0001111'
+    }
+
+    service.getCustomerById(cust.customerID).subscribe((result: Customer) => {
+      expect(result).toBeTruthy();
+      expect(result.customerFirstName).toBe(cust.customerFirstName);
+      expect(result.customerID).toBe(cust.customerID)
+    })
+
+    const mockRequest = testingController.expectOne({ url: `/api/Customers/${cust.customerID}`, method: 'GET' });
+    mockRequest.flush(cust);
   });
 });
