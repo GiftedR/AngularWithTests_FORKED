@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "karma-opera-launcher": "^1.0.0"
+  }
+}
